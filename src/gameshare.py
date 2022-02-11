@@ -5,7 +5,7 @@ from discord.commands import Option
 # from discord import context
 import json
 import urllib.request
-from discord import SlashCommandGroup
+# from discord import SlashCommandGroup
 
 
 class GameSelect(discord.ui.Select):
