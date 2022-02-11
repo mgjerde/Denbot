@@ -15,6 +15,6 @@ denbot = commands.Bot(intents=intents, debug_guilds=DEBUG_GUILD)
 denbot.load_extension("moderator_commands")
 denbot.load_extension("seasonal_winter")
 denbot.load_extension("lfg")
-denbot.load_extension("gameshare")
+# denbot.load_extension("gameshare")
 
 denbot.run(TOKEN) 

@@ -2,7 +2,7 @@ import discord
 
 from discord.ext import commands
 from discord.commands import Option
-from discord import context
+# from discord import context
 import json
 import urllib.request
 from discord import SlashCommandGroup
@@ -58,7 +58,7 @@ class Games(commands.Cog):
         
 
     @commands.slash_command(default_permission=True, name="lookup", description="Donate a game to the community")
-    async def addgame(self, ctx: context,
+    async def addgame(self, ctx: discord.context,
                     game: Option(str, "What game do you want to add?")):
 
         # This will crash if non-basic letters like æøå is being used, library bug or server settings? halp
