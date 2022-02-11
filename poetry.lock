@@ -103,6 +103,17 @@ speed = ["orjson (>=3.5.4)", "aiodns (>=1.1)", "brotlipy", "cchardet"]
 voice = ["PyNaCl (>=1.3.0,<1.6)"]
 
 [[package]]
+name = "python-dotenv"
+version = "0.19.2"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "yarl"
 version = "1.7.2"
 description = "Yet another URL library"
@@ -117,7 +128,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "26405522d1719702582a8e2d91b2d6096e38c9141cb8a1083680ac9c70d4dd45"
+content-hash = "0f889d4d0b7f9e5e81400f09f380916e702bdbc3229522e3c936b575bce5dc83"
 
 [metadata.files]
 aiohttp = [
@@ -339,6 +350,10 @@ multidict = [
 py-cord = [
     {file = "py-cord-2.0.0b4.tar.gz", hash = "sha256:49b216af4595781f110725660786c8d650b661c45aff4c392d74e886d0f3c4c0"},
     {file = "py_cord-2.0.0b4-py3-none-any.whl", hash = "sha256:34ef313b814997d819458d5e7147b011a18b9613f02f369bb432c9ca52924173"},
+]
+python-dotenv = [
+    {file = "python-dotenv-0.19.2.tar.gz", hash = "sha256:a5de49a31e953b45ff2d2fd434bbc2670e8db5273606c1e737cc6b93eff3655f"},
+    {file = "python_dotenv-0.19.2-py2.py3-none-any.whl", hash = "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3"},
 ]
 yarl = [
     {file = "yarl-1.7.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:f2a8508f7350512434e41065684076f640ecce176d262a7d54f0da41d99c5a95"},
