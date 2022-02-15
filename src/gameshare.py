@@ -17,6 +17,7 @@ class GameSelect(discord.ui.Select):
             max_values=1,
             options=[],
         )
+        
     async def callback(self, interaction: discord.Interaction):
 
         await interaction.response.send_message(content=self.values[0])
@@ -57,8 +58,8 @@ class Games(commands.Cog):
         self.bot = bot
         
 
-    @commands.slash_command(default_permission=True, name="lookup", description="Donate a game to the community")
-    async def addgame(self, ctx: discord.context,
+    @commands.slash_command(default_permission=True, name="addgame", description="Donate a game to the community")
+    async def addgame(self, ctx: commands.context,
                     game: Option(str, "What game do you want to add?")):
 
         # This will crash if non-basic letters like æøå is being used, library bug or server settings? halp
@@ -79,7 +80,9 @@ class Games(commands.Cog):
         else:
             await ctx.respond("No games found...", ephemeral=True
             )
+    async def callback(self, interaction: discord.Interaction):
 
+        pass 
 
   
 
