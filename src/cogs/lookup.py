@@ -58,8 +58,7 @@ class Lookup(commands.Cog):
             
             await ctx.respond("Game lookup", ephemeral=True, view=searchview)
         else:
-            await ctx.respond("No games found...", ephemeral=True
-            )
+            await ctx.respond("No games found...", ephemeral=True)
         
 
 

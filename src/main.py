@@ -1,3 +1,5 @@
+import fnmatch
+import os
 from dotenv import load_dotenv
 from os import getenv
 import discord
@@ -12,10 +14,10 @@ TOKEN = getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.all()
 denbot = commands.Bot(intents=intents, debug_guilds=DEBUG_GUILD)
-denbot.load_extension("moderator_commands")
-denbot.load_extension("seasonal_winter")
-denbot.load_extension("lfg")
-denbot.load_extension("gameshare")
-denbot.load_extension("lookup")
+
+with os.scandir("src/cogs") as fileList:
+    for file in fileList:
+        if fnmatch.fnmatch(file,"*.py"):
+            denbot.load_extension(f"cogs.{os.path.splitext(file.name)[0]}")
 
 denbot.run(TOKEN) 
