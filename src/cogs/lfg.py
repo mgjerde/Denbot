@@ -16,7 +16,7 @@ class Lfg(commands.Cog):
             await after.remove_roles(lfg_role)
 
     @commands.slash_command(default_permission=True, name="lfg", description="Looking for peeps to play with")
-    async def lfg(self, ctx: context):  # user commands return the member
+    async def lfg(self, ctx: context): 
         lfg_role = get( ctx.author.guild.roles, name=LFG_ROLE )
         await ctx.author.add_roles(lfg_role)
         await ctx.respond("LFG role given!", ephemeral=True)

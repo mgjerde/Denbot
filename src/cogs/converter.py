@@ -46,10 +46,6 @@ units = {
 
 async def unit_from(ctx: AutocompleteContext):
     return [unit for unit in units.keys() if ctx.value.lower() in unit.lower()]
-    # for unit in units.keys():
-    #     print(f"{ctx.value.lower()} in {unit.lower()}")
-    #     print(ctx.value.lower() in unit.lower())
-    # return units.keys
 
 class Converter(commands.Cog):
     def __init__(self, bot):
