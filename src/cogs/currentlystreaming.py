@@ -17,11 +17,7 @@ class CurrentlyStreaming(commands.Cog):
         for activity in after.activities:
             if isinstance(activity, discord.Streaming): # Making sure it's the correct activity
                 isstreaming = True
-
-        if isstreaming:  # and streaming_role in after.roles:
-            await after.add_roles(streaming_role)
-        else:
-            await after.remove_roles(streaming_role)
+        await after.add_roles(streaming_role) if isstreaming else await after.remove_roles(streaming_role)
                 
 
 def setup(bot: commands.Bot):
