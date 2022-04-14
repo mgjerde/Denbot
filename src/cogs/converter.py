@@ -1,15 +1,4 @@
-from discord import ApplicationContext, AutocompleteContext, Embed, Color, utils
-# from discord.commands import Option, slash_command
-# from discord.ext import commands
-# import discord
-from discord.ui import View, Select
-from discord import command, Interaction, Embed, Color
-from discord.commands import Option, slash_command
-from discord.ext import commands
-import urllib.request
-import json
 import discord
-import math
 
 def temp_c2f(celsius):
     return round(1.8 * celsius + 32,2)
@@ -44,27 +33,27 @@ units = {
 }
 
 
-async def unit_from(ctx: AutocompleteContext):
+async def unit_from(ctx: discord.AutocompleteContext):
     return [unit for unit in units.keys() if ctx.value.lower() in unit.lower()]
 
-class Converter(commands.Cog):
+class Converter(discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.slash_command(name="convert", description="Conceptual converter")
+    @discord.commands.slash_command(name="convert", description="Conceptual converter")
     async def convert_command(
         self,
-        ctx: ApplicationContext,
-        unit: Option(str, "Pick an unit", autocomplete=unit_from),
-        amount: Option(float,"What amount?"),
+        ctx: discord.ApplicationContext,
+        unit: discord.commands.Option(str, "Pick an unit", autocomplete=unit_from),
+        amount: discord.commands.Option(float,"What amount?"),
         ):
-        embed = Embed(title=f"{amount} {unit} is:",  color=Color.random())
+        embed = discord.Embed(title=f"{amount} {unit} is:",  color=discord.Color.random())
         for convertedunit in units[unit].keys():
             if callable(units[unit][convertedunit]):
                 embed.add_field(name=f"{convertedunit}", value=units[unit][convertedunit](amount) , inline=True)
-            else:
+            else: 
                 embed.add_field(name=f"{convertedunit}", value=round(units[unit][convertedunit]*amount,3) , inline=True)
-        await ctx.response.send_message(embeds=[embed])
+        await ctx.response.send_message(embed=embed)
 
-def setup(bot: commands.Bot):
+def setup(bot: discord.ext.commands.Bot):
     bot.add_cog(Converter(bot))

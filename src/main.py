@@ -1,19 +1,15 @@
 import fnmatch
 import os
-from dotenv import load_dotenv
-from os import getenv
 import discord
 from discord.ext import commands
-# from discord.ext.commands import context
+import configparser
 
 
-load_dotenv()
-DEBUG_GUILD = list()
-DEBUG_GUILD.append(int(getenv('DEBUG_GUILD')))
-TOKEN = getenv('DISCORD_TOKEN')
+config = configparser.ConfigParser()
+config.read('settings.ini')
 
-intents = discord.Intents.all()
-denbot = commands.Bot(intents=intents, debug_guilds=DEBUG_GUILD)
+
+denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[(int(config['BASE']['DEBUG_GUILD'])),963433519642730567])
 
 with os.scandir("src/cogs") as fileList:
     for file in fileList:
@@ -28,4 +24,4 @@ async def on_ready():
         print(f"{guild.name} (ID: {guild.id})")
 
 
-denbot.run(TOKEN) 
+denbot.run(config['BASE']['DISCORD_TOKEN']) 

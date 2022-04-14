@@ -1,24 +1,22 @@
-from discord.ext.commands import context
-from discord.ext import commands
-import discord.utils
-from dotenv import load_dotenv
-from os import getenv
-load_dotenv()
-ROLE = getenv('STREAMING_ROLE')
+import configparser
+import discord
 
-class CurrentlyStreaming(commands.Cog):
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
+class CurrentlyStreaming(discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.Cog.listener()
+    @discord.ext.commands.Cog.listener()
     async def on_presence_update(self, before, after):
-        streaming_role = discord.utils.get( before.guild.roles, name=ROLE )
+        streaming_role = discord.utils.get( before.guild.roles, id=int(config[str(before.guild.id)]['STREAMING_ROLE']) )
         isstreaming = False
         for activity in after.activities:
-            if isinstance(activity, discord.Streaming): # Making sure it's the correct activity
+            if isinstance(activity, discord.Streaming): 
                 isstreaming = True
         await after.add_roles(streaming_role) if isstreaming else await after.remove_roles(streaming_role)
-                
+        # TODO: Should add a check for if streaming role is not set yet
 
-def setup(bot: commands.Bot):
+def setup(bot: discord.ext.commands.Bot):
     bot.add_cog(CurrentlyStreaming(bot))
