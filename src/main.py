@@ -9,7 +9,7 @@ config = configparser.ConfigParser()
 config.read('settings.ini')
 
 
-denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[(int(config['BASE']['DEBUG_GUILD'])),963433519642730567])
+denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[(int(config['BASE']['DEBUG_GUILD']))])
 
 with os.scandir("src/cogs") as fileList:
     for file in fileList:

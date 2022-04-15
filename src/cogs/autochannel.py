@@ -13,7 +13,11 @@ class Autochannel(discord.ext.commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         
         if after.channel and after.channel.id == int(config[str(member.guild.id)]['AC_CHANNEL']):
-            print(f"{member.name} went from {before.channel} to {after.channel} -- {member.guild.id}")
+            if member.activity:
+                member.guild.create_voice_channel(F"🎮 {member.activity.name}",category='',position='')
+                pass
+            print(f"")
+        print(f"position: {after.channel.position}/{len(after.channel.category.channels)}")
 
         
     # create channel when joining specific channel and move user
