@@ -1,8 +1,6 @@
 import discord
 import configparser
 
-config = configparser.ConfigParser()
-config.read('settings.ini')
 
 class Autochannel(discord.ext.commands.Cog):
     def __init__(self, bot):
@@ -11,8 +9,11 @@ class Autochannel(discord.ext.commands.Cog):
 
     @discord.ext.commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        
-        if after.channel and after.channel.id == int(config[str(member.guild.id)]['AC_CHANNEL']):
+        config = configparser.ConfigParser()
+        config.read('settings.ini')
+
+        autochannelid = int(config[str(member.guild.id)]['AC_CHANNEL'])
+        if after.channel and after.channel.id == autochannelid:
             if member.activity:
                 channame = F"🎮 {member.activity.name}"
             else:

@@ -78,8 +78,6 @@ class Settings(discord.ext.commands.Cog):
     async def on_ready(self):
         self.bot.add_view(SettingsView())
 
-    discord.CommandPermission("owner", 2, True)
-        
     @discord.ext.commands.slash_command(name="settings", description="Change the settings on the server")
     async def settings_command(
         self,
