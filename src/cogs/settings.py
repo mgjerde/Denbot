@@ -8,13 +8,8 @@ config.read('settings.ini')
 
 class SettingsView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None) # specify the timeout here
+        super().__init__(timeout=None)
    
-    async def on_timeout(self):
-        for child in self.children:
-            child.disabled = True
-         # await self.message.edit(content="You took too long! Disabled all the components.", view=self)    
-    
     @discord.ui.button(label="Currently playing", style=discord.ButtonStyle.primary, emoji="📽️", custom_id="cp_button")
     async def cp_callback(self, button, interaction):
         cp_dropdown = Dropdown(self)
@@ -87,8 +82,8 @@ class Settings(discord.ext.commands.Cog):
     async def settings_command(
         self,
         ctx: discord.ApplicationContext,):
-                
-        await ctx.response.send_message(view=SettingsView(), ephemeral=True)
+        
+        await ctx.response.send_message(view=SettingsView(), ephemeral=True) if ctx.author == ctx.guild.owner else await ctx.response.send_message("Only the server administrator can run this command!", ephemeral=True)
 
 
 def setup(bot: discord.ext.commands.Bot):
