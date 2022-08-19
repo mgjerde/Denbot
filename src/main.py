@@ -10,7 +10,7 @@ config.read('settings.ini')
 
 
 denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[(int(config['BASE']['DEBUG_GUILD']))])
-disabled = ["moderator_commands"]
+disabled = ["moderator_commands","pages"]
 with os.scandir("src/cogs") as fileList:
     for file in fileList:
         if fnmatch.fnmatch(file,"*.py"):
