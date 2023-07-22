@@ -1,11 +1,11 @@
 pipeline{
-    agent { dockerfile true }
+    agent { docker }
     
     stages{
         stage('Building image') {
             steps{
                 script {
-                app = docker.build("mgjerde/denbot")
+                def app = docker.build("mgjerde/denbot")
                 }
             }
         }   
