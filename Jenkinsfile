@@ -1,12 +1,12 @@
-pipeline {
+pipeline{
     agent any
-
-    stages {
-        stage('Verify Branch')
-        {
+    
+    stages{
+        stage('Building image') {
             steps{
-                echo "$GIT_BRANCH"
+                script {
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
             }
-        }
     }
 }
