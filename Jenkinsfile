@@ -1,7 +1,5 @@
 pipeline{
-    agent {  
-        label 'dock'
-    }
+    agent { dockerfile true }
     
     stages{
         stage('Building image') {
