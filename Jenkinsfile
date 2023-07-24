@@ -1,3 +1,4 @@
+def app
 pipeline{
 
     environment {
@@ -9,7 +10,6 @@ pipeline{
 
 
     stages{
-        def app
         stage('Building image') {
             steps{
                 script{            
