@@ -11,6 +11,7 @@ pipeline{
         stage('Building image') {
             steps{
                 script{            
+                    echo registryCredential
                     def customImage = docker.build(registry + ":${env.BUILD_ID}")
                     customImage.push()
                 }
