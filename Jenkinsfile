@@ -6,22 +6,22 @@ pipeline{
     }
     
     agent any
-    
+
+    def customImage 
+
     stages{
         stage('Building image') {
             steps{
                 script{            
-                    echo registryCredential
-                    def customImage = docker.build(registry + ":${env.BUILD_ID}")
-                    customImage.push()
+                    customImage = docker.build(registry + ":${env.BUILD_ID}")
                 }
             }
         }
         stage('Deploy Image') {
             steps{
                 script {
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push()
+                    customImage.withRegistry( '', registryCredential ) {
+                        customImage.push()
                     }
                 }
             }
