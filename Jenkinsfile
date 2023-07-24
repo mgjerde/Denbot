@@ -1,5 +1,4 @@
 pipeline{
-    def app
 
     environment {
         registry = "mgjerde/denbot"
@@ -10,6 +9,7 @@ pipeline{
 
 
     stages{
+        def app
         stage('Building image') {
             steps{
                 script{            
