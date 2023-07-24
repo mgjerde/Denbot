@@ -7,13 +7,12 @@ pipeline{
     
     agent any
 
-    def customImage 
 
     stages{
         stage('Building image') {
             steps{
                 script{            
-                    customImage = docker.build(registry + ":${env.BUILD_ID}")
+                    def customImage = docker.build(registry + ":${env.BUILD_ID}")
                 }
             }
         }
