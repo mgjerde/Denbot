@@ -2,7 +2,7 @@ pipeline{
 
     environment {
         registry = "mgjerde/denbot"
-        registryCredential = 'mgjerde-dockerhub'
+        registryCredential = credentials('mgjerde-dockerhub')
     }
     
     agent any
@@ -19,7 +19,7 @@ pipeline{
         stage('Deploy Image') {
             steps{
                 script {
-                    docker.withRegistry( 'https://index.docker.io/v1', registryCredential ) {
+                    docker.withRegistry( '', registryCredential ) {
                         dockerImage.push()
                     }
                 }
