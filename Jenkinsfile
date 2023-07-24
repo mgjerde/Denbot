@@ -1,9 +1,10 @@
 def app
+
 pipeline{
 
     environment {
         registry = "mgjerde/denbot"
-        registryCredential = credentials('mgjerde-dockerhub')
+        registryCredential = 'mgjerde-dockerhub'
     }
     
     agent any
