@@ -4,7 +4,7 @@ pipeline{
     stages{
         stage('Building image') {
             steps{
-                def customImage = docker.build("my-image:${env.BUILD_ID}")
+                def customImage = docker.build("mgjerde/denbot:${env.BUILD_ID}")
                 customImage.push()
             }
         }   
