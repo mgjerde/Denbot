@@ -1,10 +1,13 @@
 FROM python:3
 
-WORKDIR /usr/src/app
+RUN mkdir /app
+WORKDIR /app
 
-COPY requirements.txt ./
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+RUN mkdir /app/src
+WORKDIR /app/src
+ADD src/ .
 
-CMD [ "python", "./src/main.py" ]
+CMD [ "python", "./main.py" ]
