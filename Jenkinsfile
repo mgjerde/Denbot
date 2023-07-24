@@ -4,7 +4,8 @@ pipeline{
     stages{
         stage('Building image') {
             steps{
-                sh 'python --version'
+                def customImage = docker.build("my-image:${env.BUILD_ID}")
+                customImage.push()
             }
         }   
     }
