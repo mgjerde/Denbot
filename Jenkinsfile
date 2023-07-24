@@ -5,7 +5,7 @@ pipeline{
         registryCredential = 'mgjerde-dockerhub'
     }
     
-    agent { dockerfile true }
+    agent any
     
     stages{
         stage('Building image') {
