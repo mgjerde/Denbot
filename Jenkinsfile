@@ -1,4 +1,5 @@
 pipeline{
+    def app
 
     environment {
         registry = "mgjerde/denbot"
@@ -12,15 +13,15 @@ pipeline{
         stage('Building image') {
             steps{
                 script{            
-                    def customImage = docker.build(registry + ":${env.BUILD_ID}")
+                    app = docker.build(registry + ":${env.BUILD_ID}")
                 }
             }
         }
         stage('Deploy Image') {
             steps{
                 script {
-                    customImage.withRegistry( '', registryCredential ) {
-                        customImage.push()
+                    docker.withRegistry( '', registryCredential ) {
+                        app.push()
                     }
                 }
             }
