@@ -2,16 +2,18 @@ import fnmatch
 import os
 import discord
 from discord.ext import commands
-import configparser
+
+# import configparser
+# config = configparser.ConfigParser()
+# config.read('settings.ini')
+
+DEBUG_GUILDS = [os.environ.get("DEBUG_GUILDS")]
+DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")
 
 
-config = configparser.ConfigParser()
-config.read('settings.ini')
-
-
-denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[(int(config['BASE']['DEBUG_GUILD']))])
+denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=DEBUG_GUILDS)
 disabled = ["moderator_commands","pages"]
-with os.scandir("src/cogs") as fileList:
+with os.scandir("/app/src/cogs") as fileList:
     for file in fileList:
         if fnmatch.fnmatch(file,"*.py"):
             if not os.path.splitext(file.name)[0] in disabled:
@@ -25,4 +27,4 @@ async def on_ready():
         print(f"{guild.name} (ID: {guild.id})")
 
 
-denbot.run(config['BASE']['DISCORD_TOKEN']) 
+denbot.run(DISCORD_TOKEN) 
