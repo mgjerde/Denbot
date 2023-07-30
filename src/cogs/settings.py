@@ -1,10 +1,9 @@
-import configparser
+# import configparser
 import discord
-
-config = configparser.ConfigParser()
-config.read('settings.ini')
-
-
+import database
+from discord.ext import commands
+# config = configparser.ConfigParser()
+# config.read('settings.ini')
 
 class SettingsView(discord.ui.View):
     def __init__(self):
@@ -14,7 +13,7 @@ class SettingsView(discord.ui.View):
     async def cp_callback(self, button, interaction):
         cp_dropdown = Dropdown(self)
         for role in interaction.guild.roles:
-            if role.name != "@everyone": cp_dropdown.add_option(label=role.name,value=role.id,)
+            if role.name != "@everyone": cp_dropdown.add_option(label=role.name,value=str(role.id),)
         cp_dropdown.custom_id = "streaming_role"
         cp_dropdown.placeholder = "Set currently streaming role"
         cp_view = discord.ui.View()
@@ -25,7 +24,7 @@ class SettingsView(discord.ui.View):
     async def auto_callback(self, button, interaction):
         auto_dropdown = Dropdown(self)
         for role in interaction.guild.roles:
-            if role.name != "@everyone": auto_dropdown.add_option(label=role.name,value=role.id,)
+            if role.name != "@everyone": auto_dropdown.add_option(label=role.name,value=str(role.id),)
         auto_dropdown.custom_id = "auto_role"
         auto_dropdown.placeholder = "Set auto role"       
         auto_view = discord.ui.View()
@@ -36,7 +35,7 @@ class SettingsView(discord.ui.View):
     async def lfg_callback(self, button, interaction):
         lfg_dropdown = Dropdown(self)
         for role in interaction.guild.roles:
-            if role.name != "@everyone": lfg_dropdown.add_option(label=role.name,value=role.id,)
+            if role.name != "@everyone": lfg_dropdown.add_option(label=role.name,value=str(role.id),)
         lfg_dropdown.custom_id = "lfg_role"
         lfg_dropdown.placeholder = "Set LFG role"       
         lfg_view = discord.ui.View()
@@ -47,7 +46,7 @@ class SettingsView(discord.ui.View):
     async def ac_callback(self, button, interaction):
         ac_dropdown = Dropdown(self)
         for channel in interaction.guild.voice_channels:
-            ac_dropdown.add_option(label=channel.name,value=channel.id,)
+            ac_dropdown.add_option(label=channel.name,value=str(channel.id))
         ac_dropdown.custom_id = "ac_channel"
         ac_dropdown.placeholder = "Set autochannel"       
         ac_view = discord.ui.View()
@@ -64,21 +63,21 @@ class Dropdown(discord.ui.Select):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        config[interaction.guild_id] = {self.custom_id: self.values[0]}
-        with open('settings.ini', 'w') as configfile:
-            config.write(configfile)
+
+        # config[interaction.guild_id] = {self.custom_id: self.values[0]}
+        database.update_setting(interaction.guild_id, self.custom_id, self.values[0])
         await interaction.response.edit_message(view=SettingsView())
         
 
-class Settings(discord.ext.commands.Cog):
+class Settings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.ext.commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_ready(self):
         self.bot.add_view(SettingsView())
 
-    @discord.ext.commands.slash_command(name="settings", description="Change the settings on the server")
+    @commands.slash_command(name="settings", description="Change the settings on the server")
     async def settings_command(
         self,
         ctx: discord.ApplicationContext,):
@@ -86,5 +85,5 @@ class Settings(discord.ext.commands.Cog):
         await ctx.response.send_message(view=SettingsView(), ephemeral=True) if ctx.author == ctx.guild.owner else await ctx.response.send_message("Only the server administrator can run this command!", ephemeral=True)
 
 
-def setup(bot: discord.ext.commands.Bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Settings(bot))

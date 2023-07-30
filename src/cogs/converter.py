@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 def temp_c2f(celsius):
     return round(1.8 * celsius + 32,2)
@@ -36,7 +37,7 @@ units = {
 async def unit_from(ctx: discord.AutocompleteContext):
     return [unit for unit in units.keys() if ctx.value.lower() in unit.lower()]
 
-class Converter(discord.ext.commands.Cog):
+class Converter(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

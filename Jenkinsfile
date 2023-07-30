@@ -6,6 +6,7 @@ pipeline{
         registry = "mgjerde/denbot"
         registryCredential = 'mgjerde-dockerhub'
     }
+    }
     
     agent any
 
@@ -13,7 +14,7 @@ pipeline{
     stages{
         stage('Building image') {
             steps{
-                script{            
+                script{
                     app = docker.build(registry + ":${env.BUILD_ID}")
                 }
             }
@@ -22,7 +23,7 @@ pipeline{
             steps{
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                        app.push()
+                        app.push('latest')
                     }
                 }
             }
