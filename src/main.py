@@ -10,7 +10,7 @@ DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")
 
 denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[DEBUG_GUILDS])
 
-enabled = ["settings", "onjoin", "autochannel", "converter", "currentlystreaming", "lfg"]
+enabled = ["settings", "autochannel", "converter", "onjoin" ] #  "lfg" "currentlystreaming" 
 with os.scandir("/app/src/cogs") as fileList:
     for file in fileList:
         if fnmatch.fnmatch(file,"*.py"):
