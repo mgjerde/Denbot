@@ -8,7 +8,7 @@ from discord.ext import commands
 DEBUG_GUILDS = os.environ.get("DEBUG_GUILDS")
 DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN") 
 
-denbot = commands.Bot(intents=discord.Intents.all(), debug_guilds=[DEBUG_GUILDS])
+denbot = commands.Bot(intents=discord.Intents.all()) #  debug_guilds=[DEBUG_GUILDS]
 
 enabled = ["settings", "autochannel", "converter", "onjoin" ] #  "lfg" "currentlystreaming" 
 with os.scandir("/app/src/cogs") as fileList:
