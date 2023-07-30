@@ -5,6 +5,9 @@ pipeline{
     environment {
         registry = "mgjerde/denbot"
         registryCredential = 'mgjerde-dockerhub'
+        DISCORD_TOKEN = credentials('denbot-token')
+        DENBOTTOKENDEV = credentials('denbot-token-dev')
+    }
     }
     
     agent any

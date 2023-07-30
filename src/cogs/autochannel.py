@@ -1,19 +1,16 @@
 import discord
-import configparser
+import database
+from discord.ext import commands
 
-
-class Autochannel(discord.ext.commands.Cog):
+class Autochannel(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         super().__init__()
 
-    @discord.ext.commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        config = configparser.ConfigParser()
-        config.read('settings.ini')
-
-        autochannelid = int(config[str(member.guild.id)]['AC_CHANNEL'])
-        if after.channel and after.channel.id == autochannelid:
+        channel_id = database.get_setting(member.guild.id, 'ac_channel')
+        if after.channel and after.channel.id == channel_id:
             if member.activity:
                 channame = F"🎮 {member.activity.name}"
             else:
@@ -30,14 +27,6 @@ class Autochannel(discord.ext.commands.Cog):
 
             await self.bot.wait_for('voice_state_update',check=emptycheck)
             await newchan.delete()
-
-            
-      
-    # create channel when joining specific channel and move user ✔
-        # Change name based on Game Played ✔
-        # Give access to change name etc ✔
-    # Delete channel when leaving empty channel ✔
-
 
 
 def setup(bot: discord.ext.commands.Bot):

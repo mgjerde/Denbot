@@ -1,19 +1,22 @@
 import discord
-import configparser
-
-config = configparser.ConfigParser()
-config.read('settings.ini')
-
-class Onjoin(discord.ext.commands.Cog):
+import database
+from discord.ext import commands
+class Onjoin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         super().__init__()
 
-    @discord.ext.commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_member_join(self, member):
-        await member.add_roles(discord.utils.get( member.guild.roles, id=int(config[str(member.guild.id)]['AUTO_ROLE']) ))
-        # Needs a check if role is set
+        role_id = database.get_setting(member.guild.id, 'auto_role')
+        role = discord.utils.get(member.guild.roles, id=role_id)
+
+        if role:
+            await member.add_roles(role)
+        else:
+            pass
+        # Should get a better test probably?
 
 
-def setup(bot: discord.ext.commands.Bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Onjoin(bot))

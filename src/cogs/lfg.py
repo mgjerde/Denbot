@@ -1,27 +1,26 @@
-import configparser
 import discord
+import database
+from discord.ext import commands
 
 
 
-class Lfg(discord.ext.commands.Cog):
+class Lfg(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @discord.ext.commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_presence_update(self, before, after):
-        config = configparser.ConfigParser()
-        config.read('settings.ini')
-
-        lfg_role = discord.utils.get( before.guild.roles, id=int(config[str(before.guild.id)]['LFG_ROLE']) )
+        lfg_id = database.get_setting(before.guild.id, 'lfg_role')
+        lfg_role = discord.utils.get( before.guild.roles, id=lfg_id )
+        print(lfg_role, before.status, after.status, after.roles)
         if str(before.status) in ("online", "idle", "dnd") and str(after.status) == "offline" and lfg_role in after.roles:
             await after.remove_roles(lfg_role)
 
-    @discord.ext.commands.slash_command(default_permission=True, name="lfg", description="Looking for peeps to play with")
+    @commands.slash_command(default_permission=True, name="lfg", description="Looking for peeps to play with")
     async def lfg(self, ctx: discord.ApplicationContext): 
-        config = configparser.ConfigParser()
-        config.read('settings.ini')
+        lfg_id = database.get_setting(ctx.guild_id, 'lfg_role')
 
-        lfg_role = discord.utils.get( ctx.author.guild.roles, id=int(config[str(ctx.guild.id)]['LFG_ROLE']) )
+        lfg_role = discord.utils.get( ctx.author.guild.roles, id=lfg_id )
         await ctx.author.add_roles(lfg_role)
         await ctx.respond("LFG role given!", ephemeral=True)
 
