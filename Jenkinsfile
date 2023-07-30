@@ -6,7 +6,6 @@ pipeline{
         registry = "mgjerde/denbot"
         registryCredential = 'mgjerde-dockerhub'
     }
-    }
     
     agent any
 
