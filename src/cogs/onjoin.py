@@ -1,6 +1,8 @@
 import discord
 import database
 from discord.ext import commands
+
+
 class Onjoin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -8,7 +10,7 @@ class Onjoin(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        role_id = database.get_setting(member.guild.id, 'auto_role')
+        role_id = database.get_setting(member.guild.id, "auto_role")
         role = discord.utils.get(member.guild.roles, id=role_id)
 
         if role:
