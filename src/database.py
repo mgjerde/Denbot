@@ -3,7 +3,7 @@ class Database:
     
 
     def __init__(self):
-        self.__DB_LOCATION = "/app/data/denbot.sqlite"
+        self.__DB_LOCATION = "../data/denbot.sqlite"
         self.__connection = sqlite3.connect(self.__DB_LOCATION)
         self.cur = self.__connection.cursor()
         self.cur.execute("CREATE TABLE IF NOT EXISTS servers (guild_id NOT NULL PRIMARY KEY, ac_channel, streaming_role, lfg_role, auto_role);")
