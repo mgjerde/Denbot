@@ -10,7 +10,8 @@ class Lfg(commands.Cog):
     
     @commands.Cog.listener()
     async def on_presence_update(self, before, after):
-        lfg_id = database.get_setting(before.guild.id, 'lfg_role')
+        db = database.DB()
+        lfg_id = db.get_setting(before.guild.id, 'lfg_role')
         lfg_role = discord.utils.get( before.guild.roles, id=lfg_id )
         print(lfg_role, before.status, after.status, after.roles)
         if str(before.status) in ("online", "idle", "dnd") and str(after.status) == "offline" and lfg_role in after.roles:

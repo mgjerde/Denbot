@@ -2,60 +2,46 @@
 import discord
 import database
 from discord.ext import commands
+
 # config = configparser.ConfigParser()
 # config.read('settings.ini')
 
-class SettingsView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-   
-    @discord.ui.button(label="Currently playing", style=discord.ButtonStyle.primary, emoji="📽️", custom_id="cp_button")
-    async def cp_callback(self, button, interaction):
-        cp_dropdown = Dropdown(self)
-        for role in interaction.guild.roles:
-            if role.name != "@everyone": cp_dropdown.add_option(label=role.name,value=str(role.id),)
-        cp_dropdown.custom_id = "streaming_role"
-        cp_dropdown.placeholder = "Set currently streaming role"
-        cp_view = discord.ui.View()
-        cp_view.add_item(cp_dropdown)
-        await interaction.response.edit_message(view=cp_view)
 
-    @discord.ui.button(label="Auto role on join", style=discord.ButtonStyle.primary, emoji="🆕", custom_id="auto_button")
-    async def auto_callback(self, button, interaction):
-        auto_dropdown = Dropdown(self)
-        for role in interaction.guild.roles:
-            if role.name != "@everyone": auto_dropdown.add_option(label=role.name,value=str(role.id),)
-        auto_dropdown.custom_id = "auto_role"
-        auto_dropdown.placeholder = "Set auto role"       
-        auto_view = discord.ui.View()
-        auto_view.add_item(auto_dropdown)     
-        await interaction.response.edit_message(view=auto_view)
+class SettingButton(discord.ui.Button):
+    def __init__(self, label, identifier, data):
+        """A button for one role. `custom_id` is needed for persistent views."""
+        super().__init__(
+            label=label,
+            style=discord.ButtonStyle.primary,
+            custom_id=str(identifier),
+        )
+        self.data = data
 
-    @discord.ui.button(label="LFG Role", style=discord.ButtonStyle.primary, emoji="🕹️", custom_id="lfg_button")
-    async def lfg_callback(self, button, interaction):
-        lfg_dropdown = Dropdown(self)
-        for role in interaction.guild.roles:
-            if role.name != "@everyone": lfg_dropdown.add_option(label=role.name,value=str(role.id),)
-        lfg_dropdown.custom_id = "lfg_role"
-        lfg_dropdown.placeholder = "Set LFG role"       
-        lfg_view = discord.ui.View()
-        lfg_view.add_item(lfg_dropdown)     
-        await interaction.response.edit_message(view=lfg_view)
-    
-    @discord.ui.button(label="Auto Channel", style=discord.ButtonStyle.primary, emoji="🎙️", custom_id="ac_button")
-    async def ac_callback(self, button, interaction):
-        ac_dropdown = Dropdown(self)
-        for channel in interaction.guild.voice_channels:
-            ac_dropdown.add_option(label=channel.name,value=str(channel.id))
-        ac_dropdown.custom_id = "ac_channel"
-        ac_dropdown.placeholder = "Set autochannel"       
-        ac_view = discord.ui.View()
-        ac_view.add_item(ac_dropdown)     
-        await interaction.response.edit_message(view=ac_view)
+    async def callback(self, interaction: discord.Interaction):
+        """
+        This function will be called any time a user clicks on this button.
+
+        Parameters
+        ----------
+        interaction: :class:`discord.Interaction`
+            The interaction object that was created when a user clicks on a button.
+        """
+        dropdown = Dropdown(self)
+        dropdown.custom_id = self.custom_id
+        for x in self.data:
+            dropdown.add_option(label=x.name, value=str(x.id))
+        buttonview = discord.ui.View(timeout=None)
+        buttonview.add_item(dropdown)
+
+        await interaction.response.send_message(
+            view=buttonview,
+            ephemeral=True,
+        )
+
 
 class Dropdown(discord.ui.Select):
     def __init__(self, bot):
-        self.bot = bot 
+        self.bot = bot
         super().__init__(
             min_values=1,
             max_values=1,
@@ -63,26 +49,47 @@ class Dropdown(discord.ui.Select):
         )
 
     async def callback(self, interaction: discord.Interaction):
-
         # config[interaction.guild_id] = {self.custom_id: self.values[0]}
-        database.update_setting(interaction.guild_id, self.custom_id, self.values[0])
-        await interaction.response.edit_message(view=SettingsView())
-        
+        db = database.DB
+        db.update_setting(interaction.guild_id, self.custom_id, self.values[0])
+        await interaction.response.edit_message(
+            view=None,
+            content=f"{self.custom_id} saved as {self.values[0]}",
+            delete_after=5,
+        )
+
 
 class Settings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        self.bot.add_view(SettingsView())
-
-    @commands.slash_command(name="settings", description="Change the settings on the server")
-    async def settings_command(
+    @commands.slash_command(name="setup", description="Setup settings for the server")
+    async def setup_command(
         self,
-        ctx: discord.ApplicationContext,):
-        
-        await ctx.response.send_message(view=SettingsView(), ephemeral=True) if ctx.author == ctx.guild.owner else await ctx.response.send_message("Only the server administrator can run this command!", ephemeral=True)
+        ctx: discord.ApplicationContext,
+    ):
+        settingsview = discord.ui.View(timeout=None)
+        settingsview.add_item(
+            SettingButton("Auto role on join", "autorole", ctx.guild.roles)
+        )
+        settingsview.add_item(
+            SettingButton("Looking for group role", "lfgrole", ctx.guild.roles)
+        )
+        settingsview.add_item(
+            SettingButton("Automatic voice", "voicechannel", ctx.guild.voice_channels)
+        )
+        settingsview.add_item(
+            SettingButton("Currently Streaming", "streamingrole", ctx.guild.roles)
+        )
+        settingsview.add_item(
+            SettingButton("Event channel", "eventchannel", ctx.guild.text_channels)
+        )
+
+        await ctx.response.send_message(
+            view=settingsview, ephemeral=True
+        ) if ctx.author == ctx.guild.owner else await ctx.response.send_message(
+            "Only the server administrator can run this command!", ephemeral=True
+        )
 
 
 def setup(bot: commands.Bot):
